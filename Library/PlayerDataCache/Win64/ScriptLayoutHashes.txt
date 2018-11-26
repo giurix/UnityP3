@@ -1,6 +1,6 @@
 WindowsStandalone
 PlayerPath?
-C:/Users/Kasper/Documents/TowerDefense-Part2-Complete/TowerDefense.exe
+C:/Users/giurix/Documents/UnityP3/TowerDefense.exe
 SceneListBegin?
 Assets/Scenes/GameScene.unity
 SceneListEnd?

@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints: []
-  speed: 3
+  speed: 5
 --- !u!212 &21205182
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -30,6 +30,7 @@
 
 using UnityEngine;
 using System.Collections;
+using Emgu.CV
 
 public class BulletBehavior : MonoBehaviour
 {

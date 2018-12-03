@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &134384
 GameObject:
   m_ObjectHideFlags: 0
@@ -69,7 +69,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &410648
 Transform:
   m_ObjectHideFlags: 1
@@ -242,7 +242,7 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 158574}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 6c9cde36b0b19479ba146e80d1198811, type: 2}
   m_CullingMode: 0
@@ -304,14 +304,6 @@ MonoBehaviour:
   - cost: 200
     visualization: {fileID: 158574}
     bullet: {fileID: 104348, guid: 3f313d8981f4f40fba3631abc011b9d4, type: 2}
-    fireRate: 1
-  - cost: 110
-    visualization: {fileID: 198738}
-    bullet: {fileID: 104348, guid: e14f3a540bc1d4ae3b4e01a5a81e704a, type: 2}
-    fireRate: 1
-  - cost: 120
-    visualization: {fileID: 105412}
-    bullet: {fileID: 104348, guid: 7433f151495e34d94810958d60ab4826, type: 2}
     fireRate: 1
 --- !u!114 &11402030
 MonoBehaviour:
@@ -406,7 +398,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1063a9963851d468196a883078c8664e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dcd95a3127bd64d4e81616f874df5f04, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

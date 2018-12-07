@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/BACKUP.unity
     guid: d1646e1d35ba5fc47862c3d8f080011b
+  - enabled: 0
+    path: Assets/OpenCVSharpForUnity/Examples/DemoScenes/SimpleBlobDetection.unity
+    guid: b6be74837d169ff4d8094756068ef572
+  - enabled: 0
+    path: Assets/OpenCVSharpForUnity/Examples/Menu.unity
+    guid: 00e092d368fb12c4b811e77c299e8303
   m_configObjects: {}

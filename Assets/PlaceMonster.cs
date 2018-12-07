@@ -27,29 +27,90 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
+using OpenCvSharp;
 using UnityEngine;
 using System.Collections;
-
+using System.Runtime.InteropServices;
+using NWH;
+using UnityEngine.UI;
+using OpenCvSharp.ML;
 public class PlaceMonster : MonoBehaviour
 {
-
+    public ArrayList contours;
+    public RawImage rawImage;
+    private WebCamTexture webCamTexture;
+    private Texture2D tex;
+    private Mat mat, greyMat;
     public GameObject monsterPrefab;
     private GameObject monster;
     private GameManagerBehavior gameManager;
+    public GameObject[] openspots;
 
     // Use this for initialization
     void Start()
     {
+        openspots = GameObject.FindGameObjectsWithTag("Openspot");
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
+        webCamTexture = new WebCamTexture(WebCamTexture.devices[1].name);
+        webCamTexture.Play();
+        tex = new Texture2D(webCamTexture.width, webCamTexture.height, TextureFormat.RGBA32, false);
+        mat = new Mat(webCamTexture.height, webCamTexture.width, MatType.CV_8UC4);
+        greyMat = new Mat(webCamTexture.height, webCamTexture.width, MatType.CV_8UC1);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (webCamTexture.didUpdateThisFrame && webCamTexture.isPlaying)
+        {
+
+            CamUpdate();
+
+        }
 
     }
+    void CamUpdate()
+    {
 
+        CvUtil.GetWebCamMat(webCamTexture, ref mat);
+        Cv2.CvtColor(mat, greyMat, ColorConversionCodes.RGBA2GRAY);
+        var thresh = Cv2.Threshold(greyMat, greyMat, 100, 255, ThresholdTypes.Binary);
+        var detectorParams = new SimpleBlobDetector.Params
+        {
+            FilterByArea = true,
+            MinArea = 20, // 10 pixels squared
+            MaxArea = 200,
+
+        };
+        var simpleBlobDetector = SimpleBlobDetector.Create(detectorParams);
+        var keyPoints = simpleBlobDetector.Detect(greyMat);
+      
+        
+
+
+
+        for (int i=0; i <= keyPoints[i].Size; i++)
+            {
+
+            while (CanPlaceMonster())
+            {
+                //3
+                
+                Vector3 open = openspots[i].transform.localPosition;
+                monster = (GameObject)Instantiate(monsterPrefab, open, Quaternion.identity);
+                //4
+                
+                AudioSource audioSource = gameObject.GetComponent<AudioSource>();
+                audioSource.PlayOneShot(audioSource.clip);
+
+                gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
+
+
+            }
+            }
+        
+        CvConvert.MatToTexture2D(mat, ref tex);
+    }
     private bool CanPlaceMonster()
     {
         int cost = monsterPrefab.GetComponent<MonsterData>().levels[0].cost;
@@ -57,9 +118,22 @@ public class PlaceMonster : MonoBehaviour
     }
 
     //1
-    void OnMouseUp()
+   /* void OnMouseUp()
     {
-        //2
+        CvUtil.GetWebCamMat(webCamTexture, ref mat);
+        Cv2.CvtColor(mat, greyMat, ColorConversionCodes.RGBA2BGR);
+        var thresh = Cv2.Threshold(greyMat, greyMat, 100, 255, ThresholdTypes.Binary);
+        var detectorParams = new SimpleBlobDetector.Params
+        {
+            FilterByColor = true,
+            BlobColor = 130,
+        };
+        var simpleBlobDetector = SimpleBlobDetector.Create(detectorParams);
+        var keyPoints = simpleBlobDetector.Detect(greyMat);
+
+        CvConvert.MatToTexture2D(mat, ref tex);
+        rawImage.texture = tex;
+
         if (CanPlaceMonster())
         {
             //3
@@ -70,28 +144,9 @@ public class PlaceMonster : MonoBehaviour
 
             gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
         }
-        else if (CanUpgradeMonster())
-        {
-            monster.GetComponent<MonsterData>().increaseLevel();
-            AudioSource audioSource = gameObject.GetComponent<AudioSource>();
-            audioSource.PlayOneShot(audioSource.clip);
+       
+    }*/
 
-            gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
-        }
-    }
 
-    private bool CanUpgradeMonster()
-    {
-        if (monster != null)
-        {
-            MonsterData monsterData = monster.GetComponent<MonsterData>();
-            MonsterLevel nextLevel = monsterData.getNextLevel();
-            if (nextLevel != null)
-            {
-                return gameManager.Gold >= nextLevel.cost;
-            }
-        }
-        return false;
-    }
 
 }

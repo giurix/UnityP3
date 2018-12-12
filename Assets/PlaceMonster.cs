@@ -44,14 +44,17 @@ public class PlaceMonster : MonoBehaviour
     public GameObject monsterPrefab;
     private GameObject monster;
     private GameManagerBehavior gameManager;
-    public GameObject[] openspots;
+    private GameObject[] openspots;
+    
+    
+    
 
     // Use this for initialization
     void Start()
     {
-        openspots = GameObject.FindGameObjectsWithTag("Openspot");
+        
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
-        webCamTexture = new WebCamTexture(WebCamTexture.devices[1].name);
+        webCamTexture = new WebCamTexture(WebCamTexture.devices[0].name);
         webCamTexture.Play();
         tex = new Texture2D(webCamTexture.width, webCamTexture.height, TextureFormat.RGBA32, false);
         mat = new Mat(webCamTexture.height, webCamTexture.width, MatType.CV_8UC4);
@@ -71,7 +74,7 @@ public class PlaceMonster : MonoBehaviour
     }
     void CamUpdate()
     {
-
+        openspots = GameObject.FindGameObjectsWithTag("Openspot");
         CvUtil.GetWebCamMat(webCamTexture, ref mat);
         Cv2.CvtColor(mat, greyMat, ColorConversionCodes.RGBA2GRAY);
         var thresh = Cv2.Threshold(greyMat, greyMat, 100, 255, ThresholdTypes.Binary);
@@ -84,35 +87,41 @@ public class PlaceMonster : MonoBehaviour
         };
         var simpleBlobDetector = SimpleBlobDetector.Create(detectorParams);
         var keyPoints = simpleBlobDetector.Detect(greyMat);
-      
+
+
+
+
+
+     //   for (int j = 0; j <= keyPoints.Length; j++)
+            
+        //{
         
-
-
-
-        for (int i=0; i <= keyPoints[i].Size; i++)
+            for (int i = 0; i < openspots.Length; i++)
             {
-
-            while (CanPlaceMonster())
-            {
-                //3
+                 
                 
-                Vector3 open = openspots[i].transform.localPosition;
-                monster = (GameObject)Instantiate(monsterPrefab, open, Quaternion.identity);
-                //4
-                
-                AudioSource audioSource = gameObject.GetComponent<AudioSource>();
-                audioSource.PlayOneShot(audioSource.clip);
+                     if (monster == null)
+                     {
+                        //3
+                         monster = Instantiate(monsterPrefab, openspots[i].transform.localPosition, Quaternion.identity);
+                        //4
 
-                gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
+                        AudioSource audioSource = gameObject.GetComponent<AudioSource>();
+                        audioSource.PlayOneShot(audioSource.clip);
+
+                        gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
 
 
-            }
-            }
-        
+               }
+            
+        }
+
+
         CvConvert.MatToTexture2D(mat, ref tex);
     }
+
     private bool CanPlaceMonster()
-    {
+    { 
         int cost = monsterPrefab.GetComponent<MonsterData>().levels[0].cost;
         return monster == null && gameManager.Gold >= cost;
     }

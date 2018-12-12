@@ -20,8 +20,8 @@ public class SimpleBlobDetection : MonoBehaviour
 		webCamTexture = new WebCamTexture(WebCamTexture.devices[0].name);
 		webCamTexture.Play();
 
-		tex = new Texture2D(webCamTexture.width, webCamTexture.height, TextureFormat.RGBA32, false);
-		mat = new Mat(webCamTexture.height, webCamTexture.width, MatType.CV_8UC4);
+		tex = new Texture2D(webCamTexture.width, webCamTexture.height, TextureFormat.RGB24, false);
+		mat = new Mat(webCamTexture.height, webCamTexture.width, MatType.CV_8UC3);
         greyMat = new Mat(webCamTexture.height, webCamTexture.width, MatType.CV_8UC1);
 	}
 

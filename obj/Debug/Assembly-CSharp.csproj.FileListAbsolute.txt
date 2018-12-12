@@ -539,3 +539,4 @@ C:\Users\giurix\Documents\UnityP3\obj\Debug\Assembly-CSharp.csproj.CoreCompileIn
 C:\Users\giurix\Documents\UnityP3\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 C:\Users\giurix\Documents\UnityP3\obj\Debug\Assembly-CSharp.dll
 C:\Users\giurix\Documents\UnityP3\obj\Debug\Assembly-CSharp.pdb
+C:\Users\Kasper\Documents\UnityP3\Temp\bin\Debug\OpenCvSharp.dll

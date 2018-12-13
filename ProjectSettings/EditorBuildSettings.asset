@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/GameScene.unity
     guid: c61da0a976a9d47aaa00b5fb9c8646c6
   - enabled: 0
@@ -17,7 +17,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/OpenCVSharpForUnity/Examples/Menu.unity
     guid: 00e092d368fb12c4b811e77c299e8303
-  - enabled: 1
+  - enabled: 0
     path: Assets/Unity3D/Assets/Scenes/socketTest.unity
     guid: 8dd58b13768abee4caf929ccae7c8125
   m_configObjects: {}

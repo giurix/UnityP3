@@ -34,8 +34,29 @@ using System.Runtime.InteropServices;
 using NWH;
 using UnityEngine.UI;
 using OpenCvSharp.ML;
+using System;
+using System.Text;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using System.Globalization;
+
 public class PlaceMonster : MonoBehaviour
 {
+    // receiving Thread
+    Thread receiveThread;
+
+    // udpclient object
+    UdpClient client;
+
+    // public
+    // public string IP = "127.0.0.1"; default local
+    public int port; // define > init
+
+    // infos
+    public string lastReceivedUDPPacket = "";
+    public string allReceivedUDPPackets = ""; // clean up this from time to time!
+
     public ArrayList contours;
     public RawImage rawImage;
     private WebCamTexture webCamTexture;
@@ -45,80 +66,101 @@ public class PlaceMonster : MonoBehaviour
     private GameObject monster;
     private GameManagerBehavior gameManager;
     private GameObject[] openspots;
-    
-    
-    
+
+    private float xPos = 10.0f;
+    private float yPos = 10.0f;
+
 
     // Use this for initialization
     void Start()
     {
         
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
-        webCamTexture = new WebCamTexture(WebCamTexture.devices[0].name);
-        webCamTexture.Play();
-        tex = new Texture2D(webCamTexture.width, webCamTexture.height, TextureFormat.RGBA32, false);
-        mat = new Mat(webCamTexture.height, webCamTexture.width, MatType.CV_8UC4);
-        greyMat = new Mat(webCamTexture.height, webCamTexture.width, MatType.CV_8UC1);
+        
     }
+    private void init()
+    {
+        print("UPDSend.init()");
+
+        port = 5065;
+
+        print("Sending to 127.0.0.1 : " + port);
+
+        receiveThread = new Thread(new ThreadStart(ReceiveData));
+        receiveThread.IsBackground = true;
+        receiveThread.Start();
+
+
+    }
+    private void ReceiveData()
+    {
+        client = new UdpClient(port);
+        while (true)
+        {
+            try
+            {
+                IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+                byte[] data = client.Receive(ref anyIP);
+
+                string text = Encoding.UTF8.GetString(data);
+                string[] texts = text.Split(',');
+                string textX = texts[0];
+                string textY = texts[1];
+                print(">> " + text);
+                lastReceivedUDPPacket = text;
+                allReceivedUDPPackets = allReceivedUDPPackets + text;
+                xPos = float.Parse(textX, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
+                xPos *= 0.021818f;
+                yPos = float.Parse(textY, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
+                yPos *= 0.021818f;
+            }
+            catch (Exception e)
+            {
+                print(e.ToString());
+            }
+        }
+    }
+    public string getLatestUDPPacket()
+    {
+        allReceivedUDPPackets = "";
+        return lastReceivedUDPPacket;
+    }
+
+
+
+
 
     // Update is called once per frame
     void Update()
     {
-        if (webCamTexture.didUpdateThisFrame && webCamTexture.isPlaying)
-        {
-
-            CamUpdate();
-
-        }
-
-    }
-    void CamUpdate()
-    {
+        Vector3 nposition;
+        nposition = new Vector3(xPos, yPos);
         openspots = GameObject.FindGameObjectsWithTag("Openspot");
-        CvUtil.GetWebCamMat(webCamTexture, ref mat);
-        Cv2.CvtColor(mat, greyMat, ColorConversionCodes.RGBA2GRAY);
-        var thresh = Cv2.Threshold(greyMat, greyMat, 100, 255, ThresholdTypes.Binary);
-        var detectorParams = new SimpleBlobDetector.Params
+
+        for (int i = 0; i < openspots.Length; i++)
         {
-            FilterByArea = true,
-            MinArea = 20, // 10 pixels squared
-            MaxArea = 200,
 
-        };
-        var simpleBlobDetector = SimpleBlobDetector.Create(detectorParams);
-        var keyPoints = simpleBlobDetector.Detect(greyMat);
-
-
-
-
-
-     //   for (int j = 0; j <= keyPoints.Length; j++)
-            
-        //{
-        
-            for (int i = 0; i < openspots.Length; i++)
+            if (openspots[i].transform.localPosition.x - 500 <= nposition.x && openspots[i].transform.localPosition.x + 500 >= nposition.x)
             {
-                 
-                
-                     if (monster == null)
-                     {
-                        //3
-                         monster = Instantiate(monsterPrefab, openspots[i].transform.localPosition, Quaternion.identity);
-                        //4
 
-                        AudioSource audioSource = gameObject.GetComponent<AudioSource>();
-                        audioSource.PlayOneShot(audioSource.clip);
+                if (CanPlaceMonster())
+                {
+                    //3
+                    monster = Instantiate(monsterPrefab, openspots[i].transform.localPosition, Quaternion.identity);
+                    //4
 
-                        gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
+                    AudioSource audioSource = gameObject.GetComponent<AudioSource>();
+                    audioSource.PlayOneShot(audioSource.clip);
+
+                    gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
 
 
-               }
-            
+                }
+            }
         }
 
-
-        CvConvert.MatToTexture2D(mat, ref tex);
     }
+ 
 
     private bool CanPlaceMonster()
     { 
@@ -126,36 +168,14 @@ public class PlaceMonster : MonoBehaviour
         return monster == null && gameManager.Gold >= cost;
     }
 
-    //1
-   /* void OnMouseUp()
+
+    void OnApplicationQuit()
     {
-        CvUtil.GetWebCamMat(webCamTexture, ref mat);
-        Cv2.CvtColor(mat, greyMat, ColorConversionCodes.RGBA2BGR);
-        var thresh = Cv2.Threshold(greyMat, greyMat, 100, 255, ThresholdTypes.Binary);
-        var detectorParams = new SimpleBlobDetector.Params
+        if (receiveThread != null)
         {
-            FilterByColor = true,
-            BlobColor = 130,
-        };
-        var simpleBlobDetector = SimpleBlobDetector.Create(detectorParams);
-        var keyPoints = simpleBlobDetector.Detect(greyMat);
-
-        CvConvert.MatToTexture2D(mat, ref tex);
-        rawImage.texture = tex;
-
-        if (CanPlaceMonster())
-        {
-            //3
-            monster = (GameObject) Instantiate(monsterPrefab, transform.position, Quaternion.identity);
-            //4
-            AudioSource audioSource = gameObject.GetComponent<AudioSource>();
-            audioSource.PlayOneShot(audioSource.clip);
-
-            gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
+            receiveThread.Abort();
+            Debug.Log(receiveThread.IsAlive); //must be false
         }
-       
-    }*/
-
-
+    }
 
 }

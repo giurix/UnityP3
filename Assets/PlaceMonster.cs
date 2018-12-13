@@ -41,14 +41,14 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Globalization;
 
-public class PlaceMonster : MonoBehaviour
+public class PlaceMonster : MonoBehaviour 
 {
     // receiving Thread
     Thread receiveThread;
 
     // udpclient object
     UdpClient client;
-
+    public SocketClient MySocket;
     // public
     // public string IP = "127.0.0.1"; default local
     public int port; // define > init
@@ -58,7 +58,6 @@ public class PlaceMonster : MonoBehaviour
     public string allReceivedUDPPackets = ""; // clean up this from time to time!
 
     public ArrayList contours;
-    public RawImage rawImage;
     private WebCamTexture webCamTexture;
     private Texture2D tex;
     private Mat mat, greyMat;
@@ -67,18 +66,19 @@ public class PlaceMonster : MonoBehaviour
     private GameManagerBehavior gameManager;
     private GameObject[] openspots;
 
-    private float xPos = 10.0f;
-    private float yPos = 10.0f;
-
+    private float xPos;
+    private float yPos;
+    private string textX;
+    private string textY;
 
     // Use this for initialization
     void Start()
     {
-        
+        openspots = GameObject.FindGameObjectsWithTag("Openspot");
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
-        
+        //init();
     }
-    private void init()
+   /* public void init()
     {
         print("UPDSend.init()");
 
@@ -92,7 +92,7 @@ public class PlaceMonster : MonoBehaviour
 
 
     }
-    private void ReceiveData()
+    public void ReceiveData()
     {
         client = new UdpClient(port);
         while (true)
@@ -109,15 +109,15 @@ public class PlaceMonster : MonoBehaviour
                 print(">> " + text);
                 lastReceivedUDPPacket = text;
                 allReceivedUDPPackets = allReceivedUDPPackets + text;
-                xPos = float.Parse(textX, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
-                xPos *= 0.021818f;
-                yPos = float.Parse(textY, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
-                yPos *= 0.021818f;
+                
+                
+                break;
             }
             catch (Exception e)
             {
                 print(e.ToString());
             }
+            break;
         }
     }
     public string getLatestUDPPacket()
@@ -126,39 +126,96 @@ public class PlaceMonster : MonoBehaviour
         return lastReceivedUDPPacket;
     }
 
+    public void GetX(String textX)
+    {
+        xPos = float.Parse(textX, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
+    }
 
-
-
+    public void GetY(String textY)
+    {
+        yPos = float.Parse(textY, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
+    }
+    */
 
     // Update is called once per frame
+    private void UpdateSpots()
+    {
+        openspots = GameObject.FindGameObjectsWithTag("Openspot");
+    }
+
     void Update()
     {
-        Vector3 nposition;
-        nposition = new Vector3(xPos, yPos);
-        openspots = GameObject.FindGameObjectsWithTag("Openspot");
 
-        for (int i = 0; i < openspots.Length; i++)
+
+        //Vector3 nposition;
+        // nposition = new Vector3(xPos, yPos);
+        //GetX(textX);
+        //GetY(textY);
+
+
+        //for (int i = 0; i < openspots.Length; i++)
+        //{
+        UpdateSpots();
+        if (openspots[0].transform.localPosition.x - 50 <= MySocket.xPos && openspots[0].transform.localPosition.x + 50 >= MySocket.xPos &&
+            openspots[0].transform.localPosition.y - 50 <= MySocket.yPos && openspots[0].transform.localPosition.y + 50 >= MySocket.yPos)
         {
 
-            if (openspots[i].transform.localPosition.x - 500 <= nposition.x && openspots[i].transform.localPosition.x + 500 >= nposition.x)
+            if (CanPlaceMonster())
             {
+                //3
+                monster = Instantiate(monsterPrefab, openspots[0].transform.localPosition, Quaternion.identity);
+                //4
 
+                AudioSource audioSource = gameObject.GetComponent<AudioSource>();
+                audioSource.PlayOneShot(audioSource.clip);
+
+                gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
+                Destroy(openspots[0]);
+                
+
+            }
+        }
+        else if (openspots[1].transform.localPosition.x - 50 <= MySocket.xPos && openspots[1].transform.localPosition.x + 50 >= MySocket.xPos &&
+            openspots[1].transform.localPosition.y - 50 <= MySocket.yPos && openspots[1].transform.localPosition.y + 50 >= MySocket.yPos)
+        {
+             if (CanPlaceMonster())
+            {
+                //3
+                monster = Instantiate(monsterPrefab, openspots[1].transform.localPosition, Quaternion.identity);
+                //4
+
+                AudioSource audioSource = gameObject.GetComponent<AudioSource>();
+                audioSource.PlayOneShot(audioSource.clip);
+
+                gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
+                Destroy(openspots[1]);
+                monster = null;
+
+            }
+        else if (openspots[2].transform.localPosition.x - 50 <= MySocket.xPos && openspots[2].transform.localPosition.x + 50 >= MySocket.xPos &&
+                openspots[2].transform.localPosition.y - 50 <= MySocket.yPos && openspots[2].transform.localPosition.y + 50 >= MySocket.yPos)
+            {
                 if (CanPlaceMonster())
                 {
                     //3
-                    monster = Instantiate(monsterPrefab, openspots[i].transform.localPosition, Quaternion.identity);
+                    monster = Instantiate(monsterPrefab, openspots[2].transform.localPosition, Quaternion.identity);
                     //4
 
                     AudioSource audioSource = gameObject.GetComponent<AudioSource>();
                     audioSource.PlayOneShot(audioSource.clip);
 
                     gameManager.Gold -= monster.GetComponent<MonsterData>().CurrentLevel.cost;
-
-
+                    Destroy(openspots[2]);
+                    monster = null;
                 }
             }
-        }
+             else
+            {
+                print("No tower placed");
+            }
 
+            //}
+        }
     }
  
 
@@ -169,13 +226,13 @@ public class PlaceMonster : MonoBehaviour
     }
 
 
-    void OnApplicationQuit()
+    /*void OnApplicationQuit()
     {
         if (receiveThread != null)
         {
             receiveThread.Abort();
             Debug.Log(receiveThread.IsAlive); //must be false
         }
-    }
-
+    } */
+    
 }

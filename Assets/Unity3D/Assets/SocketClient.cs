@@ -12,8 +12,8 @@ public class SocketClient : MonoBehaviour {
     // Use this for initialization
 
     public GameObject hero;
-    private float xPos = 10.0f;
-    private float yPos = 10.0f;
+    public float xPos = 10.0f;
+    public float yPos = 10.0f;
 
 	Thread receiveThread;
 	UdpClient client;
@@ -26,25 +26,6 @@ public class SocketClient : MonoBehaviour {
 
 	void Start () {
         init();
-	}
-
-	void OnGUI(){
-		Rect  rectObj=new Rect (40,10,200,400);
-		
-		GUIStyle  style  = new GUIStyle ();
-		
-		style .alignment  = TextAnchor.UpperLeft;
-		
-		GUI .Box (rectObj,"# UDPReceive\n127.0.0.1 "+port +" #\n"
-		          
-		          //+ "shell> nc -u 127.0.0.1 : "+port +" \n"
-		          
-		          + "\nLast Packet: \n"+ lastReceivedUDPPacket
-		          
-		          //+ "\n\nAll Messages: \n"+allReceivedUDPPackets
-		          
-		          ,style );
-
 	}
 
 	private void init(){
@@ -61,7 +42,7 @@ public class SocketClient : MonoBehaviour {
 
 	}
 
-	private void ReceiveData(){
+	public void ReceiveData(){
 		client = new UdpClient (port);
 		while (true) {
 			try{
@@ -76,9 +57,7 @@ public class SocketClient : MonoBehaviour {
 				lastReceivedUDPPacket=text;
 				allReceivedUDPPackets=allReceivedUDPPackets+text;
 				xPos = float.Parse(textX, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
-				xPos *= 0.021818f;
                 yPos = float.Parse(textY, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
-                yPos *= 0.021818f;
             }
             catch(Exception e){
 				print (e.ToString());
@@ -94,8 +73,6 @@ public class SocketClient : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         
-        hero.transform.localPosition = new Vector3(xPos, yPos , 0);
-        //hero.transform.position = new Vector3(-6.0f, yPos-3, 0);
     }
 
 	void OnApplicationQuit(){

@@ -1198,11 +1198,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 408732, guid: a434226470f914c0d80f5679384d7f0d, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 202
+      value: 71
       objectReference: {fileID: 0}
     - target: {fileID: 408732, guid: a434226470f914c0d80f5679384d7f0d, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 168
+      value: 135
       objectReference: {fileID: 0}
     - target: {fileID: 408732, guid: a434226470f914c0d80f5679384d7f0d, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1256,6 +1256,10 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 34.01684
       objectReference: {fileID: 0}
+    - target: {fileID: 11487008, guid: a434226470f914c0d80f5679384d7f0d, type: 2}
+      propertyPath: MySocket
+      value: 
+      objectReference: {fileID: 1692066655}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a434226470f914c0d80f5679384d7f0d, type: 2}
   m_IsPrefabAsset: 0
@@ -1563,6 +1567,10 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 34.01684
       objectReference: {fileID: 0}
+    - target: {fileID: 11487008, guid: a434226470f914c0d80f5679384d7f0d, type: 2}
+      propertyPath: MySocket
+      value: 
+      objectReference: {fileID: 1692066655}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a434226470f914c0d80f5679384d7f0d, type: 2}
   m_IsPrefabAsset: 0
@@ -1861,11 +1869,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 408732, guid: a434226470f914c0d80f5679384d7f0d, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -51
+      value: 68
       objectReference: {fileID: 0}
     - target: {fileID: 408732, guid: a434226470f914c0d80f5679384d7f0d, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 139.5
+      value: 106
       objectReference: {fileID: 0}
     - target: {fileID: 408732, guid: a434226470f914c0d80f5679384d7f0d, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1915,6 +1923,10 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 34.01684
       objectReference: {fileID: 0}
+    - target: {fileID: 11487008, guid: a434226470f914c0d80f5679384d7f0d, type: 2}
+      propertyPath: MySocket
+      value: 
+      objectReference: {fileID: 1692066655}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a434226470f914c0d80f5679384d7f0d, type: 2}
   m_IsPrefabAsset: 0
@@ -2040,6 +2052,52 @@ Transform:
   m_Father: {fileID: 1732615887}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1692066653
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1692066654}
+  - component: {fileID: 1692066655}
+  m_Layer: 0
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1692066654
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1692066653}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 392.23148, y: 221.64157, z: 266.7215}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1692066655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1692066653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0a2acbe7efca194283c8048c6bfc124, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hero: {fileID: 0}
+  xPos: 10
+  yPos: 10
+  port: 0
+  lastReceivedUDPPacket: 
+  allReceivedUDPPackets: 
 --- !u!1 &1722442042
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ using System.Globalization;
 public class SocketClient : MonoBehaviour
 {
 
-    // Use this for initialization
+    
 
 
     Thread receiveThread;
@@ -18,7 +18,7 @@ public class SocketClient : MonoBehaviour
     public int port;
     public float xPos;
     public float yPos;
-    //info
+    
 
     public string lastReceivedUDPPacket = "";
     public string allReceivedUDPPackets = "";
@@ -76,7 +76,6 @@ public class SocketClient : MonoBehaviour
         return lastReceivedUDPPacket;
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -87,7 +86,7 @@ public class SocketClient : MonoBehaviour
         if (receiveThread != null)
         {
             receiveThread.Abort();
-            Debug.Log(receiveThread.IsAlive); //must be false
+            Debug.Log(receiveThread.IsAlive); 
         }
     }
 }

@@ -2,6 +2,6 @@ sceneSetups:
 - path: Assets/Scenes/GameScene.unity
   isLoaded: 1
   isActive: 1
-- path: Assets/Unity3D/Assets/Scenes/socketTest.unity
-  isLoaded: 0
+- path: Assets/Scenes/GameScene.NEW.unity
+  isLoaded: 1
   isActive: 0
